@@ -39,6 +39,9 @@ namespace TOTPAuthenticator
             this.countdownLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.copyButton = new System.Windows.Forms.Button();
+            this.customStringLabel = new System.Windows.Forms.Label();
+            this.copyCustomStringButton = new System.Windows.Forms.Button();
+            this.editCustomStringButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -119,11 +122,43 @@ namespace TOTPAuthenticator
             this.copyButton.UseVisualStyleBackColor = true;
             this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
             // 
+            // customStringLabel
+            // 
+            this.customStringLabel.AutoSize = true;
+            this.customStringLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.customStringLabel.Location = new System.Drawing.Point(333, 340);
+            this.customStringLabel.Name = "customStringLabel";
+            this.customStringLabel.Size = new System.Drawing.Size(0, 21);
+            this.customStringLabel.TabIndex = 5;
+            // 
+            // copyCustomStringButton
+            // 
+            this.copyCustomStringButton.Location = new System.Drawing.Point(450, 340);
+            this.copyCustomStringButton.Name = "copyCustomStringButton";
+            this.copyCustomStringButton.Size = new System.Drawing.Size(75, 23);
+            this.copyCustomStringButton.TabIndex = 6;
+            this.copyCustomStringButton.Text = "Copy";
+            this.copyCustomStringButton.UseVisualStyleBackColor = true;
+            this.copyCustomStringButton.Click += new System.EventHandler(this.copyCustomStringButton_Click);
+            // 
+            // editCustomStringButton
+            // 
+            this.editCustomStringButton.Location = new System.Drawing.Point(531, 340);
+            this.editCustomStringButton.Name = "editCustomStringButton";
+            this.editCustomStringButton.Size = new System.Drawing.Size(75, 23);
+            this.editCustomStringButton.TabIndex = 7;
+            this.editCustomStringButton.Text = "Edit";
+            this.editCustomStringButton.UseVisualStyleBackColor = true;
+            this.editCustomStringButton.Click += new System.EventHandler(this.editCustomStringButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.editCustomStringButton);
+            this.Controls.Add(this.copyCustomStringButton);
+            this.Controls.Add(this.customStringLabel);
             this.Controls.Add(this.copyButton);
             this.Controls.Add(this.countdownLabel);
             this.Controls.Add(this.totpLabel);
@@ -151,5 +186,8 @@ namespace TOTPAuthenticator
         private Label countdownLabel;
         private System.Windows.Forms.Timer timer1;
         private Button copyButton;
+        private Label customStringLabel;
+        private Button copyCustomStringButton;
+        private Button editCustomStringButton;
     }
 }

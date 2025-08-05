@@ -143,12 +143,36 @@ namespace TOTPAuthenticator
                 {
                     countdownLabel.ForeColor = SystemColors.ControlText;
                 }
+
+                customStringLabel.Text = account.CustomString;
             }
         }
 
         private void copyButton_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(totpLabel.Text);
+        }
+
+        private void copyCustomStringButton_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(customStringLabel.Text);
+        }
+
+        private void editCustomStringButton_Click(object sender, EventArgs e)
+        {
+            if (accountsListBox.SelectedIndex != -1)
+            {
+                var account = accounts[accountsListBox.SelectedIndex];
+                using (var form = new EditCustomStringForm(account.CustomString ?? string.Empty))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        account.CustomString = form.CustomString;
+                        SaveAccounts();
+                        UpdateTotp();
+                    }
+                }
+            }
         }
     }
 
@@ -157,5 +181,6 @@ namespace TOTPAuthenticator
         public string Name { get; set; } = string.Empty;
         public string Secret { get; set; } = string.Empty;
         public string? Issuer { get; set; }
+        public string? CustomString { get; set; }
     }
 }

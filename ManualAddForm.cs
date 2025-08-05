@@ -20,7 +20,7 @@ namespace TOTPAuthenticator
                 return;
             }
 
-            Account = new Account { Name = nameTextBox.Text, Secret = secretTextBox.Text };
+            Account = new Account { Name = nameTextBox.Text, Secret = secretTextBox.Text, CustomString = customStringTextBox.Text };
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

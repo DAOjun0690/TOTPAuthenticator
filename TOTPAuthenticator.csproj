@@ -13,4 +13,12 @@
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.13" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="EditCustomStringForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EditCustomStringForm.Designer.cs">
+      <DependentUpon>EditCustomStringForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

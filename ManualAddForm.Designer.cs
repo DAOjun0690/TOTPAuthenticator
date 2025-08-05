@@ -35,6 +35,8 @@ namespace TOTPAuthenticator
             this.secretTextBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.customStringTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -69,9 +71,25 @@ namespace TOTPAuthenticator
             this.secretTextBox.Size = new System.Drawing.Size(212, 23);
             this.secretTextBox.TabIndex = 3;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 73);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(42, 15);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Custom String:";
+            // 
+            // customStringTextBox
+            // 
+            this.customStringTextBox.Location = new System.Drawing.Point(116, 70);
+            this.customStringTextBox.Name = "customStringTextBox";
+            this.customStringTextBox.Size = new System.Drawing.Size(156, 23);
+            this.customStringTextBox.TabIndex = 7;
+            // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(116, 70);
+            this.okButton.Location = new System.Drawing.Point(116, 99);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 4;
@@ -81,7 +99,7 @@ namespace TOTPAuthenticator
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(197, 70);
+            this.cancelButton.Location = new System.Drawing.Point(197, 99);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 5;
@@ -93,13 +111,17 @@ namespace TOTPAuthenticator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 106);
+            this.ClientSize = new System.Drawing.Size(284, 134);
+            this.Controls.Add(this.customStringTextBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.secretTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.nameTextBox);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.customStringTextBox);
             this.Name = "ManualAddForm";
             this.Text = "Add Account Manually";
             this.ResumeLayout(false);
@@ -114,5 +136,7 @@ namespace TOTPAuthenticator
         private System.Windows.Forms.TextBox secretTextBox;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox customStringTextBox;
     }
 }
