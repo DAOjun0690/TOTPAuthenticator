@@ -133,12 +133,13 @@ namespace TOTPAuthenticator
 
         private void EditAccount(Account account)
         {
-            using (var form = new EditAccountForm(account.Name, account.CustomString ?? string.Empty))
+            using (var form = new EditAccountForm(account.Name, account.CustomString ?? string.Empty, account.Issuer ?? string.Empty))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     account.Name = form.AccountName;
                     account.CustomString = form.CustomString;
+                    account.Issuer = form.Issuer;
                     SaveAccounts();
                     UpdateAccountsList();
                 }
