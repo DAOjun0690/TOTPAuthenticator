@@ -1,14 +1,10 @@
 using OtpNet;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZXing;
 using ZXing.Windows.Compatibility;
@@ -91,11 +87,6 @@ namespace TOTPAuthenticator
             }
         }
 
-        private void accountsListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateTotp();
-        }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateTotp();
@@ -118,69 +109,59 @@ namespace TOTPAuthenticator
 
         private void UpdateAccountsList()
         {
-            accountsListBox.Items.Clear();
-            foreach (var account in accounts)
+            flowLayoutPanel1.Controls.Clear();
+            var filteredAccounts = accounts.Where(a => string.IsNullOrEmpty(searchTextBox.Text) || a.Name.Contains(searchTextBox.Text) || (a.Issuer != null && a.Issuer.Contains(searchTextBox.Text)));
+            foreach (var account in filteredAccounts)
             {
-                accountsListBox.Items.Add(account.Name);
+                var accountControl = new AccountControl { Account = account };
+                accountControl.EditClicked += (s, ev) => EditAccount(account);
+                accountControl.DeleteClicked += (s, ev) => DeleteAccount(account);
+                flowLayoutPanel1.Controls.Add(accountControl);
             }
         }
 
         private void UpdateTotp()
         {
-            if (accountsListBox.SelectedIndex != -1)
+            foreach (AccountControl control in flowLayoutPanel1.Controls)
             {
-                var account = accounts[accountsListBox.SelectedIndex];
-                var totp = new Totp(Base32Encoding.ToBytes(account.Secret));
-                totpLabel.Text = totp.ComputeTotp();
+                var totp = new Totp(Base32Encoding.ToBytes(control.Account.Secret));
                 var remainingSeconds = 30 - (DateTime.UtcNow.Second % 30);
-                countdownLabel.Text = remainingSeconds.ToString();
-
-                if (remainingSeconds <= 5)
-                {
-                    countdownLabel.ForeColor = Color.Red;
-                }
-                else
-                {
-                    countdownLabel.ForeColor = SystemColors.ControlText;
-                }
-
-                customStringLabel.Text = account.CustomString;
+                control.UpdateTotp(totp.ComputeTotp(), remainingSeconds);
             }
         }
 
-        private void copyButton_Click(object sender, EventArgs e)
+        private void EditAccount(Account account)
         {
-            Clipboard.SetText(totpLabel.Text);
-        }
-
-        private void copyCustomStringButton_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetText(customStringLabel.Text);
-        }
-
-        private void editCustomStringButton_Click(object sender, EventArgs e)
-        {
-            if (accountsListBox.SelectedIndex != -1)
+            using (var form = new EditAccountForm(account.Name, account.CustomString ?? string.Empty))
             {
-                var account = accounts[accountsListBox.SelectedIndex];
-                using (var form = new EditCustomStringForm(account.CustomString ?? string.Empty))
+                if (form.ShowDialog() == DialogResult.OK)
                 {
-                    if (form.ShowDialog() == DialogResult.OK)
-                    {
-                        account.CustomString = form.CustomString;
-                        SaveAccounts();
-                        UpdateTotp();
-                    }
+                    account.Name = form.AccountName;
+                    account.CustomString = form.CustomString;
+                    SaveAccounts();
+                    UpdateAccountsList();
                 }
             }
         }
-    }
 
-    public class Account
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Secret { get; set; } = string.Empty;
-        public string? Issuer { get; set; }
-        public string? CustomString { get; set; }
+        private void DeleteAccount(Account account)
+        {
+            if (MessageBox.Show($"Are you sure you want to delete {account.Name}?", "Confirm Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                accounts.Remove(account);
+                SaveAccounts();
+                UpdateAccountsList();
+            }
+        }
+
+        private void searchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateAccountsList();
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            addManuallyToolStripMenuItem_Click(sender, e);
+        }
     }
 }

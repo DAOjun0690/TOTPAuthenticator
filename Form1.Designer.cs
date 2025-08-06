@@ -34,14 +34,10 @@ namespace TOTPAuthenticator
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFromQRCodeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addManuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.accountsListBox = new System.Windows.Forms.ListBox();
-            this.totpLabel = new System.Windows.Forms.Label();
-            this.countdownLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.copyButton = new System.Windows.Forms.Button();
-            this.customStringLabel = new System.Windows.Forms.Label();
-            this.copyCustomStringButton = new System.Windows.Forms.Button();
-            this.editCustomStringButton = new System.Windows.Forms.Button();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.addButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +47,7 @@ namespace TOTPAuthenticator
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(400, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -78,95 +74,50 @@ namespace TOTPAuthenticator
             this.addManuallyToolStripMenuItem.Text = "Add Manually";
             this.addManuallyToolStripMenuItem.Click += new System.EventHandler(this.addManuallyToolStripMenuItem_Click);
             // 
-            // accountsListBox
-            // 
-            this.accountsListBox.FormattingEnabled = true;
-            this.accountsListBox.ItemHeight = 15;
-            this.accountsListBox.Location = new System.Drawing.Point(12, 27);
-            this.accountsListBox.Name = "accountsListBox";
-            this.accountsListBox.Size = new System.Drawing.Size(776, 199);
-            this.accountsListBox.TabIndex = 1;
-            this.accountsListBox.SelectedIndexChanged += new System.EventHandler(this.accountsListBox_SelectedIndexChanged);
-            // 
-            // totpLabel
-            // 
-            this.totpLabel.AutoSize = true;
-            this.totpLabel.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.totpLabel.Location = new System.Drawing.Point(333, 252);
-            this.totpLabel.Name = "totpLabel";
-            this.totpLabel.Size = new System.Drawing.Size(111, 45);
-            this.totpLabel.TabIndex = 2;
-            this.totpLabel.Text = "000000";
-            // 
-            // countdownLabel
-            // 
-            this.countdownLabel.AutoSize = true;
-            this.countdownLabel.Location = new System.Drawing.Point(383, 309);
-            this.countdownLabel.Name = "countdownLabel";
-            this.countdownLabel.Size = new System.Drawing.Size(19, 15);
-            this.countdownLabel.TabIndex = 3;
-            this.countdownLabel.Text = "30";
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // copyButton
+            // flowLayoutPanel1
             // 
-            this.copyButton.Location = new System.Drawing.Point(450, 268);
-            this.copyButton.Name = "copyButton";
-            this.copyButton.Size = new System.Drawing.Size(75, 23);
-            this.copyButton.TabIndex = 4;
-            this.copyButton.Text = "Copy";
-            this.copyButton.UseVisualStyleBackColor = true;
-            this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 60);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(376, 529);
+            this.flowLayoutPanel1.TabIndex = 1;
             // 
-            // customStringLabel
+            // searchTextBox
             // 
-            this.customStringLabel.AutoSize = true;
-            this.customStringLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.customStringLabel.Location = new System.Drawing.Point(333, 340);
-            this.customStringLabel.Name = "customStringLabel";
-            this.customStringLabel.Size = new System.Drawing.Size(0, 21);
-            this.customStringLabel.TabIndex = 5;
+            this.searchTextBox.Location = new System.Drawing.Point(12, 31);
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Size = new System.Drawing.Size(290, 23);
+            this.searchTextBox.TabIndex = 2;
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
             // 
-            // copyCustomStringButton
+            // addButton
             // 
-            this.copyCustomStringButton.Location = new System.Drawing.Point(450, 340);
-            this.copyCustomStringButton.Name = "copyCustomStringButton";
-            this.copyCustomStringButton.Size = new System.Drawing.Size(75, 23);
-            this.copyCustomStringButton.TabIndex = 6;
-            this.copyCustomStringButton.Text = "Copy";
-            this.copyCustomStringButton.UseVisualStyleBackColor = true;
-            this.copyCustomStringButton.Click += new System.EventHandler(this.copyCustomStringButton_Click);
-            // 
-            // editCustomStringButton
-            // 
-            this.editCustomStringButton.Location = new System.Drawing.Point(531, 340);
-            this.editCustomStringButton.Name = "editCustomStringButton";
-            this.editCustomStringButton.Size = new System.Drawing.Size(75, 23);
-            this.editCustomStringButton.TabIndex = 7;
-            this.editCustomStringButton.Text = "Edit";
-            this.editCustomStringButton.UseVisualStyleBackColor = true;
-            this.editCustomStringButton.Click += new System.EventHandler(this.editCustomStringButton_Click);
+            this.addButton.Location = new System.Drawing.Point(308, 31);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(80, 23);
+            this.addButton.TabIndex = 3;
+            this.addButton.Text = "+ 新增";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.editCustomStringButton);
-            this.Controls.Add(this.copyCustomStringButton);
-            this.Controls.Add(this.customStringLabel);
-            this.Controls.Add(this.copyButton);
-            this.Controls.Add(this.countdownLabel);
-            this.Controls.Add(this.totpLabel);
-            this.Controls.Add(this.accountsListBox);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.ClientSize = new System.Drawing.Size(400, 601);
+            this.Controls.Add(this.addButton);
+            this.Controls.Add(this.searchTextBox);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "TOTP Authenticator";
+            this.Text = "Easy OTP";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -181,13 +132,9 @@ namespace TOTPAuthenticator
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem addFromQRCodeFileToolStripMenuItem;
         private ToolStripMenuItem addManuallyToolStripMenuItem;
-        private ListBox accountsListBox;
-        private Label totpLabel;
-        private Label countdownLabel;
         private System.Windows.Forms.Timer timer1;
-        private Button copyButton;
-        private Label customStringLabel;
-        private Button copyCustomStringButton;
-        private Button editCustomStringButton;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private TextBox searchTextBox;
+        private Button addButton;
     }
 }
