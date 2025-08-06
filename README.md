@@ -15,7 +15,8 @@ TOTPAuthenticator 是一個基於 Windows Forms 的桌面應用程式，用於�
     *   **即時倒數**：每個驗證碼卡片上顯示一個圓形倒數計時器，指示當前 TOTP 的剩餘有效時間。
     *   **搜尋功能**：快速篩選和查找特定帳戶。
     *   **一鍵複製**：點擊 TOTP 驗證碼或自訂字串即可複製到剪貼簿。
-*   **資料持久化**：帳戶資料會自動保存到 `accounts.json` 檔案中，確保應用程式重啟後資料不會丟失。
+    *   **開啟設定檔資料夾**：直接開啟 `accounts.json` 所在的資料夾。
+*   **資料持久化**：帳戶資料會自動保存到使用者應用程式的 Roaming 資料夾 (`%APPDATA%\TOTPAuthenticator\accounts.json`) 中，確保應用程式重啟後資料不會丟失。
 
 ## 專案結構
 
@@ -23,16 +24,16 @@ TOTPAuthenticator 是一個基於 Windows Forms 的桌面應用程式，用於�
 TOTPAuthenticator/
 ├───.gitattributes
 ├───.gitignore
-├───accounts.json             # 帳戶資料儲存檔案
+├───accounts.json             # 帳戶資料儲存檔案 (位於 %APPDATA%\TOTPAuthenticator)
 ├───Form1.cs                  # 主視窗的程式碼
 ├───Form1.Designer.cs         # 主視窗的 UI 設計器程式碼
 ├───Form1.resx                # 主視窗的資源檔
 ├───ManualAddForm.cs          # 手動新增帳戶視窗的程式碼
 ├───ManualAddForm.Designer.cs # 手動新增帳戶視窗的 UI 設計器程式碼
 ├───ManualAddForm.resx        # 手動新增帳戶視窗的資源檔
-├───EditCustomStringForm.cs   # 編輯自訂字串視窗的程式碼
-├───EditCustomStringForm.Designer.cs # 編輯自訂字串視窗的 UI 設計器程式碼
-├───EditCustomStringForm.resx # 編輯自訂字串視窗的資源檔
+├───EditAccountForm.cs        # 編輯帳戶視窗的程式碼
+├───EditAccountForm.Designer.cs # 編輯帳戶視窗的 UI 設計器程式碼
+├───EditAccountForm.resx      # 編輯帳戶視窗的資源檔
 ├───Account.cs                # 帳戶資料模型定義
 ├───AccountControl.cs         # 自訂帳戶卡片使用者控制項的程式碼
 ├───AccountControl.Designer.cs# 自訂帳戶卡片使用者控制項的 UI 設計器程式碼

@@ -2,6 +2,7 @@ using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -15,10 +16,13 @@ namespace TOTPAuthenticator
     {
         private List<Account> accounts = new List<Account>();
         private const string ACCOUNTS_FILE = "accounts.json";
+        private string _accountsFilePath; // Path for saving accounts
 
         public Form1()
         {
             InitializeComponent();
+            _accountsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TOTPAuthenticator", ACCOUNTS_FILE);
+            Directory.CreateDirectory(Path.GetDirectoryName(_accountsFilePath));
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -75,14 +79,11 @@ namespace TOTPAuthenticator
         {
             using (var form = new ManualAddForm())
             {
-                if (form.ShowDialog() == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK && form.Account != null)
                 {
-                    if (form.Account != null)
-                    {
-                        accounts.Add(form.Account);
-                        SaveAccounts();
-                        UpdateAccountsList();
-                    }
+                    accounts.Add(form.Account);
+                    SaveAccounts();
+                    UpdateAccountsList();
                 }
             }
         }
@@ -94,9 +95,9 @@ namespace TOTPAuthenticator
 
         private void LoadAccounts()
         {
-            if (File.Exists(ACCOUNTS_FILE))
+            if (File.Exists(_accountsFilePath))
             {
-                var json = File.ReadAllText(ACCOUNTS_FILE);
+                var json = File.ReadAllText(_accountsFilePath);
                 accounts = JsonSerializer.Deserialize<List<Account>>(json) ?? new List<Account>();
             }
         }
@@ -104,7 +105,7 @@ namespace TOTPAuthenticator
         private void SaveAccounts()
         {
             var json = JsonSerializer.Serialize(accounts);
-            File.WriteAllText(ACCOUNTS_FILE, json);
+            File.WriteAllText(_accountsFilePath, json);
         }
 
         private void UpdateAccountsList()
@@ -162,6 +163,18 @@ namespace TOTPAuthenticator
         private void addButton_Click(object sender, EventArgs e)
         {
             addManuallyToolStripMenuItem_Click(sender, e);
+        }
+
+        private void openAccountsFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("explorer.exe", Path.GetDirectoryName(_accountsFilePath));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"開啟資料夾時發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

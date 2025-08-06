@@ -34,6 +34,7 @@ namespace TOTPAuthenticator
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFromQRCodeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addManuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchTextBox = new System.Windows.Forms.TextBox();
@@ -55,24 +56,32 @@ namespace TOTPAuthenticator
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addFromQRCodeFileToolStripMenuItem,
-            this.addManuallyToolStripMenuItem});
+            this.addManuallyToolStripMenuItem,
+            this.exportAccountsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
-            this.fileToolStripMenuItem.Text = "點我新增";
+            this.fileToolStripMenuItem.Text = "檔案";
             // 
             // addFromQRCodeFileToolStripMenuItem
             // 
             this.addFromQRCodeFileToolStripMenuItem.Name = "addFromQRCodeFileToolStripMenuItem";
             this.addFromQRCodeFileToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.addFromQRCodeFileToolStripMenuItem.Text = "從 QR Code 圖檔";
+            this.addFromQRCodeFileToolStripMenuItem.Text = "從 QR Code 圖檔新增";
             this.addFromQRCodeFileToolStripMenuItem.Click += new System.EventHandler(this.addFromQRCodeFileToolStripMenuItem_Click);
             // 
             // addManuallyToolStripMenuItem
             // 
             this.addManuallyToolStripMenuItem.Name = "addManuallyToolStripMenuItem";
             this.addManuallyToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.addManuallyToolStripMenuItem.Text = "手動輸入";
+            this.addManuallyToolStripMenuItem.Text = "手動輸入金鑰新增";
             this.addManuallyToolStripMenuItem.Click += new System.EventHandler(this.addManuallyToolStripMenuItem_Click);
+            // 
+            // exportAccountsToolStripMenuItem
+            // 
+            this.exportAccountsToolStripMenuItem.Name = "exportAccountsToolStripMenuItem";
+            this.exportAccountsToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.exportAccountsToolStripMenuItem.Text = "開啟設定檔資料夾";
+            this.exportAccountsToolStripMenuItem.Click += new System.EventHandler(this.openAccountsFolderToolStripMenuItem_Click);
             // 
             // timer1
             // 
@@ -136,5 +145,6 @@ namespace TOTPAuthenticator
         private FlowLayoutPanel flowLayoutPanel1;
         private TextBox searchTextBox;
         private Button addButton;
+        private ToolStripMenuItem exportAccountsToolStripMenuItem;
     }
 }
