@@ -146,7 +146,7 @@ namespace TOTPAuthenticator
 
         private void DeleteAccount(Account account)
         {
-            if (MessageBox.Show($"Are you sure you want to delete {account.Name}?", "Confirm Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show($"是否要刪除 {account.Name} ?", "請確認刪除", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 accounts.Remove(account);
                 SaveAccounts();

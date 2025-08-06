@@ -96,7 +96,7 @@ namespace TOTPAuthenticator
         private async void ShowCopyMessage(Control control)
         {
             var originalText = control.Text;
-            control.Text = "Copied!";
+            control.Text = "已複製!";
             await Task.Delay(1000);
             control.Text = originalText;
         }

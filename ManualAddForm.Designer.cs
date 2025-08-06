@@ -46,7 +46,7 @@ namespace TOTPAuthenticator
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Name:";
+            this.label1.Text = "名稱:";
             // 
             // nameTextBox
             // 
@@ -78,7 +78,7 @@ namespace TOTPAuthenticator
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 15);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Custom String:";
+            this.label3.Text = "自定義文字:";
             // 
             // customStringTextBox
             // 
@@ -93,7 +93,7 @@ namespace TOTPAuthenticator
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 4;
-            this.okButton.Text = "OK";
+            this.okButton.Text = "新增";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
@@ -103,7 +103,7 @@ namespace TOTPAuthenticator
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 5;
-            this.cancelButton.Text = "Cancel";
+            this.cancelButton.Text = "取消";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
@@ -123,7 +123,7 @@ namespace TOTPAuthenticator
             this.Controls.Add(this.label3);
             this.Controls.Add(this.customStringTextBox);
             this.Name = "ManualAddForm";
-            this.Text = "Add Account Manually";
+            this.Text = "手動新增畫面";
             this.ResumeLayout(false);
             this.PerformLayout();
         }

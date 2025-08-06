@@ -58,20 +58,20 @@ namespace TOTPAuthenticator
             this.addManuallyToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "點我新增";
             // 
             // addFromQRCodeFileToolStripMenuItem
             // 
             this.addFromQRCodeFileToolStripMenuItem.Name = "addFromQRCodeFileToolStripMenuItem";
             this.addFromQRCodeFileToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.addFromQRCodeFileToolStripMenuItem.Text = "Add from QR Code File";
+            this.addFromQRCodeFileToolStripMenuItem.Text = "從 QR Code 圖檔";
             this.addFromQRCodeFileToolStripMenuItem.Click += new System.EventHandler(this.addFromQRCodeFileToolStripMenuItem_Click);
             // 
             // addManuallyToolStripMenuItem
             // 
             this.addManuallyToolStripMenuItem.Name = "addManuallyToolStripMenuItem";
             this.addManuallyToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.addManuallyToolStripMenuItem.Text = "Add Manually";
+            this.addManuallyToolStripMenuItem.Text = "手動輸入";
             this.addManuallyToolStripMenuItem.Click += new System.EventHandler(this.addManuallyToolStripMenuItem_Click);
             // 
             // timer1
