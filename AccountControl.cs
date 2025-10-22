@@ -89,6 +89,8 @@ namespace TOTPAuthenticator
 
         private void customStringLabel_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(customStringLabel.Text))
+                return;
             Clipboard.SetText(customStringLabel.Text);
             ShowCopyMessage(customStringLabel);
         }

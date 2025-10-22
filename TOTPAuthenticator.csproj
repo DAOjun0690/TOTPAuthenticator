@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\decodeGoogleOTP-windows-amd64.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="AccountControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

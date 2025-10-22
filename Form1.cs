@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Windows.Forms;
 using ZXing;
@@ -21,8 +22,18 @@ namespace TOTPAuthenticator
         public Form1()
         {
             InitializeComponent();
-            _accountsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TOTPAuthenticator", ACCOUNTS_FILE);
+#if DEBUG
+            // DEBUG 模式：使用專案根目錄的 accounts.json
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+            _accountsFilePath = Path.Combine(projectRoot, ACCOUNTS_FILE);
+#else
+            // RELEASE 模式：使用 AppData/Roaming 資料夾
+            _accountsFilePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "TOTPAuthenticator",
+                ACCOUNTS_FILE);
             Directory.CreateDirectory(Path.GetDirectoryName(_accountsFilePath));
+#endif
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -40,18 +51,32 @@ namespace TOTPAuthenticator
             {
                 try
                 {
-                    var barcodeReader = new BarcodeReader();
-                    var result = barcodeReader.Decode(new Bitmap(openFileDialog.FileName));
-                    if (result != null)
+                    var barcodeReader = new BarcodeReader
                     {
-                        var uri = new Uri(result.Text);
-                        var query = uri.Query;
-                        var secret = GetValueFromQuery(query, "secret");
-                        var issuer = GetValueFromQuery(query, "issuer");
-                        var account = new Account { Name = uri.LocalPath.Trim('/'), Secret = secret ?? string.Empty, Issuer = issuer ?? string.Empty };
-                        accounts.Add(account);
-                        SaveAccounts();
-                        UpdateAccountsList();
+                        AutoRotate = true,
+                        Options = new ZXing.Common.DecodingOptions
+                        {
+                            TryHarder = true,
+                            PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.QR_CODE },
+                            CharacterSet = "UTF-8"
+                        }
+                    };
+
+                    using (var bitmap = (Bitmap)Image.FromFile(openFileDialog.FileName))
+                    {
+                        var result = barcodeReader.Decode(bitmap);
+
+                        if (result != null)
+                        {
+                            var uri = new Uri(result.Text);
+                            var query = uri.Query;
+                            var secret = GetValueFromQuery(query, "secret");
+                            var issuer = GetValueFromQuery(query, "issuer");
+                            var account = new Account { Name = uri.LocalPath.Trim('/'), Secret = secret ?? string.Empty, Issuer = issuer ?? string.Empty };
+                            accounts.Add(account);
+                            SaveAccounts();
+                            UpdateAccountsList();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -104,7 +129,12 @@ namespace TOTPAuthenticator
 
         private void SaveAccounts()
         {
-            var json = JsonSerializer.Serialize(accounts);
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,  // 啟用縮排格式化
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping  // 允許中文字元不被編碼
+            };
+            var json = JsonSerializer.Serialize(accounts, options);
             File.WriteAllText(_accountsFilePath, json);
         }
 
@@ -125,9 +155,13 @@ namespace TOTPAuthenticator
         {
             foreach (AccountControl control in flowLayoutPanel1.Controls)
             {
-                var totp = new Totp(Base32Encoding.ToBytes(control.Account.Secret));
-                var remainingSeconds = 30 - (DateTime.UtcNow.Second % 30);
-                control.UpdateTotp(totp.ComputeTotp(), remainingSeconds);
+                var secret = control?.Account?.Secret;
+                if (!string.IsNullOrEmpty(secret))
+                {
+                    var totp = new Totp(Base32Encoding.ToBytes(control?.Account?.Secret));
+                    var remainingSeconds = 30 - (DateTime.UtcNow.Second % 30);
+                    control.UpdateTotp(totp.ComputeTotp(), remainingSeconds);
+                }
             }
         }
 
@@ -176,6 +210,148 @@ namespace TOTPAuthenticator
             {
                 MessageBox.Show($"開啟資料夾時發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void addFromGoogleAuthenticatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // 從內嵌資源解壓縮 decodeGoogleOTP.exe
+                    string decoderPath = ExtractEmbeddedDecoder();
+
+                    // 建立暫存輸出檔案路徑（decodeGoogleOTP 輸出 CSV 格式，但副檔名可以是 .json）
+                    string outputCsvPath = Path.Combine(Path.GetTempPath(), $"google_otp_output_{Guid.NewGuid()}.csv");
+
+                    // 執行解碼程式
+                    var processInfo = new ProcessStartInfo
+                    {
+                        FileName = decoderPath,
+                        Arguments = $"-i \"{openFileDialog.FileName}\" -c \"{outputCsvPath}\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    };
+
+                    using (var process = Process.Start(processInfo))
+                    {
+                        if (process == null)
+                        {
+                            throw new Exception("無法啟動解碼程式");
+                        }
+
+                        process.WaitForExit();
+
+                        if (process.ExitCode != 0)
+                        {
+                            string error = process.StandardError.ReadToEnd();
+                            throw new Exception($"解碼失敗：{error}");
+                        }
+                    }
+
+                    // 讀取並解析 CSV
+                    if (File.Exists(outputCsvPath))
+                    {
+                        var lines = File.ReadAllLines(outputCsvPath);
+
+                        if (lines.Length <= 1)
+                        {
+                            MessageBox.Show("圖片中未找到任何 OTP 帳戶資料", "匯入失敗", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            try { File.Delete(outputCsvPath); } catch { }
+                            return;
+                        }
+
+                        int addedCount = 0;
+                        // 跳過標題行（第一行），從第二行開始解析
+                        for (int i = 1; i < lines.Length; i++)
+                        {
+                            string line = lines[i].Trim();
+                            if (string.IsNullOrEmpty(line))
+                                continue;
+
+                            // CSV 格式：Issuer,Name,Secret,Type,Counter,URL
+                            var parts = line.Split(',');
+                            if (parts.Length >= 3)
+                            {
+                                string issuer = parts[0].Trim();
+                                string name = parts[1].Trim();
+                                string secret = parts[2].Trim();
+
+                                if (!string.IsNullOrEmpty(secret))
+                                {
+                                    accounts.Add(new Account
+                                    {
+                                        Name = name,
+                                        Secret = secret,
+                                        Issuer = string.IsNullOrEmpty(issuer) ? null : issuer
+                                    });
+                                    addedCount++;
+                                }
+                            }
+                        }
+
+                        SaveAccounts();
+                        UpdateAccountsList();
+
+                        if (addedCount > 0)
+                        {
+                            MessageBox.Show($"成功匯入", "匯入成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("圖片中未找到任何有效的 OTP 帳戶資料", "匯入失敗", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
+                        // 刪除暫存 CSV 檔案
+                        try { File.Delete(outputCsvPath); } catch { }
+                    }
+                    else
+                    {
+                        throw new Exception("解碼程式未產生輸出檔案");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"從 Google 驗證器圖片匯入時發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private string ExtractEmbeddedDecoder()
+        {
+            // 在暫存目錄中建立解碼器路徑
+            string tempPath = Path.Combine(Path.GetTempPath(), "TOTPAuthenticator");
+            Directory.CreateDirectory(tempPath);
+            string decoderPath = Path.Combine(tempPath, "decodeGoogleOTP-windows-amd64.exe");
+
+            // 如果檔案已存在，直接返回
+            if (File.Exists(decoderPath))
+            {
+                return decoderPath;
+            }
+
+            // 從內嵌資源解壓縮
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourceName = "TOTPAuthenticator.Resources.decodeGoogleOTP-windows-amd64.exe";
+
+            using (Stream? resourceStream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (resourceStream == null)
+                {
+                    throw new Exception($"找不到內嵌資源：{resourceName}");
+                }
+
+                using (FileStream fileStream = File.Create(decoderPath))
+                {
+                    resourceStream.CopyTo(fileStream);
+                }
+            }
+
+            return decoderPath;
         }
     }
 }

@@ -33,6 +33,7 @@ namespace TOTPAuthenticator
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFromQRCodeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFromGoogleAuthenticatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addManuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -56,6 +57,7 @@ namespace TOTPAuthenticator
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addFromQRCodeFileToolStripMenuItem,
+            this.addFromGoogleAuthenticatorToolStripMenuItem,
             this.addManuallyToolStripMenuItem,
             this.exportAccountsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -63,23 +65,30 @@ namespace TOTPAuthenticator
             this.fileToolStripMenuItem.Text = "檔案";
             // 
             // addFromQRCodeFileToolStripMenuItem
-            // 
+            //
             this.addFromQRCodeFileToolStripMenuItem.Name = "addFromQRCodeFileToolStripMenuItem";
-            this.addFromQRCodeFileToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.addFromQRCodeFileToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.addFromQRCodeFileToolStripMenuItem.Text = "從 QR Code 圖檔新增";
             this.addFromQRCodeFileToolStripMenuItem.Click += new System.EventHandler(this.addFromQRCodeFileToolStripMenuItem_Click);
-            // 
+            //
+            // addFromGoogleAuthenticatorToolStripMenuItem
+            //
+            this.addFromGoogleAuthenticatorToolStripMenuItem.Name = "addFromGoogleAuthenticatorToolStripMenuItem";
+            this.addFromGoogleAuthenticatorToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.addFromGoogleAuthenticatorToolStripMenuItem.Text = "從 Google 驗證器圖片匯入";
+            this.addFromGoogleAuthenticatorToolStripMenuItem.Click += new System.EventHandler(this.addFromGoogleAuthenticatorToolStripMenuItem_Click);
+            //
             // addManuallyToolStripMenuItem
-            // 
+            //
             this.addManuallyToolStripMenuItem.Name = "addManuallyToolStripMenuItem";
-            this.addManuallyToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.addManuallyToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.addManuallyToolStripMenuItem.Text = "手動輸入金鑰新增";
             this.addManuallyToolStripMenuItem.Click += new System.EventHandler(this.addManuallyToolStripMenuItem_Click);
-            // 
+            //
             // exportAccountsToolStripMenuItem
-            // 
+            //
             this.exportAccountsToolStripMenuItem.Name = "exportAccountsToolStripMenuItem";
-            this.exportAccountsToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.exportAccountsToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.exportAccountsToolStripMenuItem.Text = "開啟設定檔資料夾";
             this.exportAccountsToolStripMenuItem.Click += new System.EventHandler(this.openAccountsFolderToolStripMenuItem_Click);
             // 
@@ -125,8 +134,8 @@ namespace TOTPAuthenticator
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
-            this.Text = "Easy OTP";
+            this.Name = "Form";
+            this.Text = "TOTPAuthenticator";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -140,6 +149,7 @@ namespace TOTPAuthenticator
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem addFromQRCodeFileToolStripMenuItem;
+        private ToolStripMenuItem addFromGoogleAuthenticatorToolStripMenuItem;
         private ToolStripMenuItem addManuallyToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
         private FlowLayoutPanel flowLayoutPanel1;
