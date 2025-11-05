@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOTP Authenticator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TOTP Authenticator</h1>
+        </header>
+
+        <div class="toolbar">
+            <input type="text" id="searchInput" placeholder="搜尋帳戶..." class="search-box">
+            <button id="importQRButton" class="btn-qr">📷 新增QR Code</button>
+            <button id="importGoogleButton" class="btn-import">📱 新增Google 驗證器</button>
+            <button id="addButton" class="btn-add">+ 手動新增</button>
+            <input type="file" id="qrCodeFile" accept="image/*" style="display: none;">
+            <input type="file" id="googleAuthFile" accept="image/*" style="display: none;">
+        </div>
+
+        <div id="accountList" class="account-list"></div>
+    </div>
+
+    <!-- 新增/編輯帳戶對話框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">新增帳戶</h2>
+            <form id="accountForm">
+                <div class="form-group">
+                    <label for="issuer">標題 (可選):</label>
+                    <input type="text" id="issuer" placeholder="如: Google, GitHub">
+                </div>
+                <div class="form-group">
+                    <label for="name">名稱:</label>
+                    <input type="text" id="name" required placeholder="如: user@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="secret">Secret Key:</label>
+                    <input type="text" id="secret" required placeholder="Base32 編碼的金鑰">
+                </div>
+                <div class="form-group">
+                    <label for="customString">自定義文字:</label>
+                    <input type="text" id="customString" placeholder="備註或其他資訊">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-primary">儲存</button>
+                    <button type="button" id="cancelButton" class="btn-secondary">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

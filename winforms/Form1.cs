@@ -24,7 +24,7 @@ namespace TOTPAuthenticator
             InitializeComponent();
 #if DEBUG
             // DEBUG 模式：使用專案根目錄的 accounts.json
-            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\"));
             _accountsFilePath = Path.Combine(projectRoot, ACCOUNTS_FILE);
 #else
             // RELEASE 模式：使用 AppData/Roaming 資料夾

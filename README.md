@@ -1,90 +1,222 @@
 # TOTPAuthenticator
 
-TOTPAuthenticator 是一個基於 Windows Forms 的桌面應用程式，用於生成和管理基於時間的一次性密碼 (TOTP)。它提供了一個現代化的使用者介面，支援手動新增帳戶、從 QR Code 檔案匯入，並允許使用者自訂和編輯每個驗證碼的額外資訊。
+TOTPAuthenticator 是一個 .NET 9.0 專案，提供兩種版本的 TOTP (Time-based One-Time Password) 驗證器：
+
+1. **Windows Forms 桌面應用程式** - 傳統桌面應用，適合 Windows 使用者
+2. **ASP.NET Core Web 應用程式** - 現代化 Web 版本，可在任何裝置的瀏覽器中使用
+
+兩個版本共用相同的資料儲存位置，可以互通使用。
 
 ## 主要功能
 
-*   **TOTP 生成**：根據帳戶密鑰生成標準的 TOTP 驗證碼。
+### 核心功能（兩個版本完全對等）
+
+*   **TOTP 生成**：根據帳戶密鑰生成標準的 30 秒週期 TOTP 驗證碼
 *   **帳戶管理**：
-    *   **手動新增**：允許使用者手動輸入帳戶名稱、密鑰、發行者和自訂字串。
-    *   **QR Code 匯入**：支援從 QR Code 圖片檔案中讀取帳戶資訊（名稱、密鑰、發行者）。
-    *   **編輯帳戶資訊**：為每個帳戶提供編輯名稱、發行者和自訂字串的功能。
-    *   **刪除帳戶**：從列表中移除不再需要的帳戶。
+    *   **手動新增**：手動輸入帳戶名稱、密鑰、發行者和自訂字串
+    *   **QR Code 匯入**：從單張 QR Code 圖片檔案讀取帳戶資訊
+    *   **Google 驗證器匯入**：從 Google 驗證器的匯出圖片批次匯入多個帳戶
+    *   **編輯帳戶**：更新帳戶的名稱、發行者和自訂字串
+    *   **刪除帳戶**：移除不再需要的帳戶
 *   **使用者介面**：
-    *   **現代化設計**：採用深色主題和卡片式佈局，提供清晰直觀的視覺體驗。
-    *   **即時倒數**：每個驗證碼卡片上顯示一個圓形倒數計時器，指示當前 TOTP 的剩餘有效時間。
-    *   **搜尋功能**：快速篩選和查找特定帳戶。
-    *   **一鍵複製**：點擊 TOTP 驗證碼或自訂字串即可複製到剪貼簿。
-    *   **開啟設定檔資料夾**：直接開啟 `accounts.json` 所在的資料夾。
-*   **資料持久化**：帳戶資料會自動保存到使用者應用程式的 Roaming 資料夾 (`%APPDATA%\TOTPAuthenticator\accounts.json`) 中，確保應用程式重啟後資料不會丟失。
+    *   **現代化設計**：深色主題和卡片式佈局
+    *   **即時倒數**：圓形倒數計時器顯示 TOTP 剩餘有效時間
+    *   **搜尋功能**：快速篩選和查找特定帳戶
+    *   **一鍵複製**：點擊 TOTP 驗證碼或自訂字串即可複製到剪貼簿
+*   **資料持久化**：帳戶資料自動保存到 `%APPDATA%\TOTPAuthenticator\accounts.json`
+
+### WinForms 版本特色
+
+*   **原生 Windows 體驗**：完整的系統整合
+*   **QR Code 技術**：使用 ZXing.Net 庫進行解析
+*   **單一執行檔**：可打包成獨立的 .exe 檔案
+*   **離線運作**：不需要網路連線
+
+### Web 版本特色
+
+*   **跨平台存取**：可在任何裝置的瀏覽器中使用（Windows、macOS、Linux、行動裝置）
+*   **RESTful API**：提供完整的 API 端點供其他應用程式整合
+*   **響應式設計**：自動適應各種螢幕尺寸
+*   **即時更新**：TOTP 碼每秒自動更新，無需手動刷新
+*   **QR Code 技術**：使用 jsQR 庫在瀏覽器中直接解析
+*   **純前端 QR Code**：QR Code 解析完全在瀏覽器中進行，無需上傳到伺服器
 
 ## 專案結構
 
 ```
 TOTPAuthenticator/
-├───.gitattributes
-├───.gitignore
-├───accounts.json             # 帳戶資料儲存檔案 (位於 %APPDATA%\TOTPAuthenticator)
-├───Form1.cs                  # 主視窗的程式碼
-├───Form1.Designer.cs         # 主視窗的 UI 設計器程式碼
-├───Form1.resx                # 主視窗的資源檔
-├───ManualAddForm.cs          # 手動新增帳戶視窗的程式碼
-├───ManualAddForm.Designer.cs # 手動新增帳戶視窗的 UI 設計器程式碼
-├───ManualAddForm.resx        # 手動新增帳戶視窗的資源檔
-├───EditAccountForm.cs        # 編輯帳戶視窗的程式碼
-├───EditAccountForm.Designer.cs # 編輯帳戶視窗的 UI 設計器程式碼
-├───EditAccountForm.resx      # 編輯帳戶視窗的資源檔
-├───Account.cs                # 帳戶資料模型定義
-├───AccountControl.cs         # 自訂帳戶卡片使用者控制項的程式碼
-├───AccountControl.Designer.cs# 自訂帳戶卡片使用者控制項的 UI 設計器程式碼
-├───AccountControl.resx       # 自訂帳戶卡片使用者控制項的資源檔
-├───Program.cs                # 應用程式的進入點
-├───README.md                 # 專案說明文件
-├───TOTPAuthenticator.csproj  # C# 專案檔
-├───TOTPAuthenticator.sln     # Visual Studio 解決方案檔
-├───bin/                      # 編譯後的執行檔
-└───obj/                      # 編譯中間檔案
+├── TOTPAuthenticator.sln     # Visual Studio 解決方案檔 (包含兩個專案)
+├── CLAUDE.md                 # Claude Code 專案說明
+├── README.md                 # 專案說明文件
+├── winforms/                 # WinForms 桌面應用程式專案
+│   ├── Account.cs            # 帳戶資料模型
+│   ├── AccountControl.cs     # 自訂帳戶卡片使用者控制項
+│   ├── Form1.cs              # 主視窗
+│   ├── ManualAddForm.cs      # 手動新增帳戶視窗
+│   ├── EditAccountForm.cs    # 編輯帳戶視窗
+│   ├── Program.cs            # 應用程式進入點
+│   ├── TOTPAuthenticator.csproj
+│   ├── Properties/
+│   ├── Resources/
+│   ├── bin/
+│   └── obj/
+└── webapp/                   # Web 應用程式專案
+    ├── Account.cs            # 帳戶資料模型 (與 WinForms 共用結構)
+    ├── AccountService.cs     # 帳戶管理服務 (含 Google 驗證器匯入邏輯)
+    ├── Program.cs            # Web API 進入點和路由定義
+    ├── EmbeddedStaticFilesMiddleware.cs  # 嵌入式靜態檔案中間件
+    ├── TOTPAuthenticatorWeb.csproj       # 專案檔 (配置嵌入式資源)
+    ├── wwwroot/              # 前端靜態檔案 (發布時嵌入到 exe)
+    │   ├── index.html        # 主頁面 (引入 jsQR 庫)
+    │   ├── style.css         # 樣式表
+    │   └── app.js            # 前端邏輯 (含 QR Code 解析)
+    ├── Resources/            # 資源檔案
+    │   └── decodeGoogleOTP-windows-amd64.exe  # Google 驗證器解碼工具
+    ├── Properties/
+    ├── bin/
+    └── obj/
 ```
+
+**共用資料儲存位置**：
+- `%APPDATA%\TOTPAuthenticator\accounts.json` (兩個專案都使用此檔案)
+
+## 快速開始
+
+### 執行 WinForms 版本
+
+```bash
+# 從根目錄執行
+dotnet run --project winforms
+
+# 或從 winforms 目錄執行
+cd winforms
+dotnet run
+```
+
+### 執行 Web 版本
+
+```bash
+# 從根目錄執行
+dotnet run --project webapp
+
+# 或從 webapp 目錄執行
+cd webapp
+dotnet run
+```
+
+Web 版本預設會在 http://localhost:5044 啟動，用瀏覽器開啟即可使用。
+
+### 發佈應用程式
+
+**WinForms 版本 (單一執行檔)**
+```bash
+cd winforms
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+```
+執行檔位於 `winforms/bin/Release/net9.0-windows/win-x64/publish/`
+
+**Web 版本 (單一執行檔，包含嵌入式靜態檔案)**
+```bash
+# Self-contained 發布，wwwroot 內容已嵌入到 exe 中
+cd webapp
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+```
+執行檔位於 `webapp/bin/Release/net9.0/win-x64/publish/`
+
+**特色**：
+- wwwroot 資料夾內容（HTML、CSS、JS）已嵌入到 exe 中
+- 發布後無需單獨的 wwwroot 資料夾
+- 只需要 `TOTPAuthenticatorWeb.exe` 和 `Resources/` 資料夾（用於 Google 驗證器匯入）
+- 開發模式自動使用檔案系統，發布模式自動使用嵌入式資源
 
 ## 架構分析
 
-### 模組依賴圖
+### 整體架構圖
+
+```mermaid
+graph TB
+    subgraph "WinForms 專案"
+        WF_Program[Program.cs] --> WF_Form1[Form1.cs]
+        WF_Form1 --> WF_Account[Account.cs]
+        WF_Form1 --> WF_AccountControl[AccountControl.cs]
+        WF_Form1 --> WF_ManualAdd[ManualAddForm.cs]
+        WF_Form1 --> WF_EditForm[EditAccountForm.cs]
+        WF_Form1 --> OtpNet1[Otp.NET]
+        WF_Form1 --> ZXing[ZXing.Net]
+    end
+
+    subgraph "Web 專案"
+        Web_Program[Program.cs<br/>Minimal API] --> Web_Service[AccountService.cs]
+        Web_Program --> Web_API[API Endpoints]
+        Web_Service --> Web_Account[Account.cs]
+        Web_Service --> OtpNet2[Otp.NET]
+        Web_API --> Web_Static[wwwroot/]
+        Web_Static --> HTML[index.html]
+        Web_Static --> CSS[style.css]
+        Web_Static --> JS[app.js]
+    end
+
+    subgraph "共用資料儲存"
+        AccountsFile["%APPDATA%\TOTPAuthenticator\<br/>accounts.json"]
+    end
+
+    WF_Form1 --> AccountsFile
+    Web_Service --> AccountsFile
+
+    JS --> Web_API
+```
+
+### WinForms 專案架構
+
+詳細的 WinForms 專案模組依賴關係：
 
 ```mermaid
 graph TB
     Program[Program.cs] --> Form1[Form1.cs]
-    
+
     Form1 --> Account[Account.cs]
     Form1 --> AccountControl[AccountControl.cs]
     Form1 --> ManualAddForm[ManualAddForm.cs]
     Form1 --> EditAccountForm[EditAccountForm.cs]
-    Form1 --> OtpNet[OtpNet 套件]
-    Form1 --> ZXing[ZXing 套件]
+    Form1 --> OtpNet[Otp.NET]
+    Form1 --> ZXing[ZXing.Net]
     Form1 --> JSON[System.Text.Json]
-    
+
     AccountControl --> Account
     ManualAddForm --> Account
     EditAccountForm --> Account
-    
-    subgraph "外部依賴"
-        OtpNet["OtpNet 1.4.0<br/>TOTP 生成"]
-        ZXing["ZXing.Net 0.16.13<br/>QR Code 解析"]
-        JSON["System.Text.Json<br/>資料持久化"]
-    end
-    
-    subgraph "資料層"
-        Account["Account.cs<br/>帳戶資料模型"]
-        AccountsFile["accounts.json<br/>持久化儲存"]
-    end
-    
-    subgraph "UI 層"
-        Form1["Form1.cs<br/>主視窗"]
-        AccountControl["AccountControl.cs<br/>帳戶卡片"]
-        ManualAddForm["ManualAddForm.cs<br/>手動新增"]
-        EditAccountForm["EditAccountForm.cs<br/>編輯表單"]
-    end
-    
-    Form1 --> AccountsFile
+
+    Form1 --> AccountsFile[accounts.json]
+```
+
+### Web 專案架構
+
+```mermaid
+graph TB
+    Program[Program.cs<br/>Minimal API] --> Service[AccountService.cs]
+    Program --> API[API Endpoints]
+
+    Service --> Account[Account.cs]
+    Service --> OtpNet[Otp.NET]
+    Service --> JSON[System.Text.Json]
+    Service --> DecodeGoogleOTP[decodeGoogleOTP<br/>工具]
+    Service --> AccountsFile[accounts.json]
+
+    API --> GET_Accounts[GET /api/accounts]
+    API --> POST_Account[POST /api/accounts]
+    API --> PUT_Account[PUT /api/accounts/:name]
+    API --> DELETE_Account[DELETE /api/accounts/:name]
+    API --> GET_TOTP[GET /api/totp/:name]
+    API --> GET_Time[GET /api/time]
+    API --> POST_ImportGoogle[POST /api/import/google-authenticator]
+
+    Program --> StaticFiles[wwwroot/]
+    StaticFiles --> HTML[index.html]
+    StaticFiles --> CSS[style.css]
+    StaticFiles --> JS[app.js]
+
+    JS --> jsQR[jsQR 庫<br/>QR Code 解析]
+    JS -- HTTP --> API
 ```
 
 ### 核心流程
@@ -178,17 +310,43 @@ sequenceDiagram
 - 自動備份：每次更改帳戶即時儲存
 - 支援特殊字元和 Unicode
 
-#### QR Code 支援
+#### QR Code 匯入
+
+**WinForms 版本**
 - 使用 ZXing.NET 套件讀取 QR Code 圖片
 - 支援格式：BMP, JPG, GIF, PNG
 - 自動解析 `otpauth://totp/` URI 格式
+- 後端處理，需要選擇本地圖片檔案
+
+**Web 版本**
+- 使用 jsQR 庫（純前端 JavaScript）
+- 支援所有瀏覽器支援的圖片格式
+- 使用 Canvas API 將圖片轉換為 ImageData
+- 完全在瀏覽器中處理，無需上傳至伺服器
+- 自動解析 `otpauth://totp/` URI 格式
+
+#### Google 驗證器批次匯入
+
+**WinForms 版本**
+- 使用內嵌的 decodeGoogleOTP-windows-amd64.exe 工具
+- 解析 Google 驗證器匯出的 QR Code 圖片
+- 自動從暫存目錄提取解碼工具
+- 支援批次匯入多個帳戶
+
+**Web 版本**
+- 檔案上傳至伺服器處理
+- 使用 decodeGoogleOTP-windows-amd64.exe 工具解析
+- API 端點：`POST /api/import/google-authenticator`
+- 支援批次匯入多個帳戶
+- 自動清理暫存檔案
 
 ## 如何建置與執行
 
 ### 前置需求
 - **.NET 9.0 SDK** 或更高版本
-- **Windows** 作業系統（Windows Forms 應用程式）
+- **Windows** 作業系統（WinForms 應用程式需要）
 - **Visual Studio 2022** 或 **Visual Studio Code**（可選）
+- **現代瀏覽器**（Web 版本需要，建議 Chrome、Edge、Firefox）
 
 ### 建置步驟
 
@@ -201,21 +359,105 @@ sequenceDiagram
     ```
 
 3.  **建置專案**：
+
+    建置整個 solution（包含兩個專案）：
     ```bash
     dotnet build
     ```
 
-4.  **執行應用程式**：
+    或分別建置：
     ```bash
-    dotnet run
+    dotnet build winforms  # 只建置 WinForms 專案
+    dotnet build webapp    # 只建置 Web 專案
     ```
-    或者，您也可以在 Visual Studio 中開啟 `TOTPAuthenticator.sln` 解決方案並執行。
 
-### 發布單一檔案
+4.  **執行應用程式**：
+
+    **WinForms 版本**：
+    ```bash
+    dotnet run --project winforms
+    ```
+
+    **Web 版本**：
+    ```bash
+    dotnet run --project webapp
+    ```
+    然後在瀏覽器中開啟 http://localhost:5044
+
+    或者，您也可以在 Visual Studio 中開啟 `TOTPAuthenticator.sln` 解決方案，選擇要執行的專案。
+
+### 發佈應用程式
+
+**WinForms 版本（單一執行檔）**
 
 為 Windows x64 建置獨立可執行檔：
 ```bash
+cd winforms
 dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
 ```
 
-編譯後的檔案在 `bin\Release\net9.0-windows\win-x64\publish\` 目錄中。
+編譯後的檔案在 `winforms\bin\Release\net9.0-windows\win-x64\publish\` 目錄中。
+
+**Web 版本（單一執行檔，包含嵌入式靜態檔案）**
+
+發佈 Web 應用程式：
+```bash
+cd webapp
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+```
+
+編譯後的檔案在 `webapp\bin\Release\net9.0\win-x64\publish` 目錄中：
+- `TOTPAuthenticatorWeb.exe` - 主程式（已包含所有 wwwroot 靜態檔案）
+
+**特點**：
+- wwwroot 資料夾內容已嵌入到 exe 中，無需單獨部署
+- 可直接執行，預設在 http://localhost:5044 和 http://0.0.0.0:5044 啟動
+- 可部署到任何 Windows 伺服器
+- 支援本地和網路訪問（0.0.0.0 允許局域網內其他設備訪問）
+
+## 功能對比表
+
+| 功能 | WinForms 版本 | Web 版本 |
+|------|--------------|----------|
+| **TOTP 生成** | ✅ | ✅ |
+| **手動新增帳戶** | ✅ | ✅ |
+| **QR Code 圖片匯入** | ✅ (ZXing.Net) | ✅ (jsQR 前端) |
+| **Google 驗證器批次匯入** | ✅ (內嵌工具) | ✅ (API 上傳) |
+| **編輯帳戶** | ✅ | ✅ |
+| **刪除帳戶** | ✅ | ✅ |
+| **搜尋功能** | ✅ | ✅ |
+| **圓形倒數計時器** | ✅ | ✅ |
+| **點擊複製** | ✅ | ✅ |
+| **深色主題** | ✅ | ✅ |
+| **資料共用** | ✅ (accounts.json) | ✅ (accounts.json) |
+| **跨平台** | ❌ (僅 Windows) | ✅ (所有平台) |
+| **RESTful API** | ❌ | ✅ |
+| **響應式設計** | ❌ | ✅ |
+| **離線運作** | ✅ | ⚠️ (需伺服器) |
+| **單一執行檔** | ✅ | ❌ |
+
+## 技術棧
+
+### WinForms 版本
+- **.NET 9.0** - Windows Forms
+- **Otp.NET** - TOTP 生成
+- **ZXing.Net** - QR Code 解析
+- **System.Text.Json** - 資料序列化
+- **decodeGoogleOTP** - Google 驗證器解碼
+
+### Web 版本
+- **ASP.NET Core 9.0** - Minimal API
+- **Otp.NET** - TOTP 生成
+- **jsQR** - 前端 QR Code 解析
+- **System.Text.Json** - 資料序列化
+- **decodeGoogleOTP** - Google 驗證器解碼
+- **Vanilla JavaScript** - 前端邏輯
+- **Canvas API** - 圖片處理
+
+## 貢獻
+
+歡迎提交 Issue 和 Pull Request！
+
+## 授權
+
+本專案採用 MIT 授權條款。
