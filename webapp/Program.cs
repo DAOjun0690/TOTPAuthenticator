@@ -1,14 +1,18 @@
-using TOTPAuthenticatorWeb;
+using Drk.AspNetCore.MinimalApiKit;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+
+using System.Diagnostics;
+using System.Drawing;
+using System.Reflection;
+
+using TOTPAuthenticatorWeb;
+
+const string appToolTip = "TOTP Authenticator";
+const string appUuid = "{9BE6C0F7-13F3-47BA-8B91-FB6A50EC8763}";
 
 var builder = WebApplication.CreateBuilder(args);
-
-// 設定預設監聽端口為 5044 (生產環境)
-// 開發模式會使用 launchSettings.json 的設定
-if (!builder.Environment.IsDevelopment())
-{
-    builder.WebHost.UseUrls("http://localhost:5044", "http://0.0.0.0:5044");
-}
 
 // Add services to the container
 builder.Services.AddSingleton<AccountService>();
@@ -172,4 +176,8 @@ app.MapPost("/api/import/google-authenticator", async (HttpRequest request) =>
     }
 });
 
+#if DEBUG
 app.Run();
+#else
+app.RunAsDesktopTool();
+#endif

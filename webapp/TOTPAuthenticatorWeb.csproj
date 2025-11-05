@@ -2,12 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+
+    <ApplicationIcon>wwwroot\TotpWebApp.ico</ApplicationIcon>
+
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    
+    <SelfContained Condition="$(SelfContained) == ''">false</SelfContained>
+    <PublishSingleFile Condition="$(Configuration) == 'Release'">true</PublishSingleFile>
+    <RuntimeIdentifier Condition="$(RuntimeIdentifier) == ''">win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Drk.AspNetCore.MinimalApiKit" Version="0.9.7" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.0" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
